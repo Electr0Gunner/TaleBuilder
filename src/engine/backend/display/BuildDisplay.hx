@@ -1,7 +1,6 @@
 package engine.backend.display;
 
 import lime.app.Application;
-import openfl.system.System;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 
@@ -35,7 +34,7 @@ class BuildDisplay extends TextField {
 
     private override function __enterFrame(deltaTime:Float):Void 
     {
-        var output = Application.current.meta.get('name') + "\nBUILD:\nID: " + Global.getBuildID();
+		var output = Application.current.meta.get('name') + "\nBUILD:\nID: " + Constants.getBuildID();
 
         text = output;
     }
