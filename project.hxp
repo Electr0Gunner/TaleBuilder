@@ -1,0 +1,119 @@
+import hxp.*;
+import lime.tools.*;
+
+/**
+ * 
+ */
+class Project extends HXProject {
+
+    static final TITLE:String = "TaleBuilder";
+
+    static final VERSION:String = "0.1.0";
+
+    static final PACKAGE_NAME:String = "io.electr0gunner.github";
+
+    static final COMPANY:String = "Electr0Gunner";
+
+    static final MAIN_CLASS:String = "Main";
+
+    static final EXECUTABLE_NAME:String = "TaleBuilder";
+
+    static final SOURCE_DIRECTORY:String = "src";
+
+    public function new() {
+        super();
+        
+        configureGame();
+        configureFlags();
+        configureCustomMacros();
+        importLibs();
+        configureAssets();
+        setupIcons();
+        
+    }
+
+    function configureGame()
+    {
+        this.meta.title = TITLE;
+		this.meta.version = VERSION;
+		this.meta.packageName = PACKAGE_NAME;
+		this.meta.company = COMPANY;
+
+		this.app.main = MAIN_CLASS;
+		this.app.file = EXECUTABLE_NAME;
+
+        sources.push(SOURCE_DIRECTORY);
+
+        this.window.fps = 60;
+
+		this.window.width = 640;
+		this.window.height = 480;
+
+		this.window.background = 0xFF000000;
+
+		this.window.hardware = true;
+		this.window.vsync = false;
+    }
+
+    function configureAssets()
+    {
+        includeAssets("Data", "data", [ "*" ], []);
+    }
+
+    function importLibs()
+    {
+        //Engine dependencies
+        haxelibs.push(new Haxelib("lime"));
+        haxelibs.push(new Haxelib("openfl"));
+
+        //Engine
+        haxelibs.push(new Haxelib("flixel"));
+        haxelibs.push(new Haxelib("flixel-addons"));
+        haxelibs.push(new Haxelib("haxeui-core"));
+        haxelibs.push(new Haxelib("haxeui-flixel"));
+        haxelibs.push(new Haxelib("box2d"));
+
+        //discord
+        haxelibs.push(new Haxelib("hxdiscord_rpc"));
+    }
+
+    function setupIcons() {
+       // this.icons.push(new Icon("icons/16.png", 16));
+       // this.icons.push(new Icon("icons/32.png", 32));
+       // this.icons.push(new Icon("icons/48.png", 48));
+       // this.icons.push(new Icon("icons/256.png", 256));
+    }
+    
+    function configureFlags()
+    {
+        haxedefs.set("FEATURE_DISCORD_RPC", isDesktop());
+        haxedefs.set("haxeui_dont_impose_base_class", true);
+    }
+
+    function configureCustomMacros() {
+		addHaxeMacro("addMetadata('@:build(engine.backend.macro.CustomMacros.addZToFlxObject())', 'flixel.FlxObject')");
+	}
+
+	public function addHaxeMacro(value:String):Void {
+		this.haxeflags.push('--macro ${value}');
+	}
+
+    ////
+    //ALOT OF HELPER FUNCTIONS
+    ////
+    public function isDesktop():Bool {
+		return this.platformType == PlatformType.DESKTOP;
+	}
+
+    public function isWindows():Bool {
+		return this.target == Platform.WINDOWS;
+	}
+
+    public function isMac():Bool {
+		return this.target == Platform.MAC;
+	}
+
+	public function isLinux():Bool {
+		return this.target == Platform.LINUX;
+	}
+}

@@ -1,0 +1,8 @@
+<dialog id="ID_NEWMAPDIALOG" width="400" title="Create new map">
+    <label text="Map Name:" verticalAlign="center" />
+    <textfield id="ID_ROOMNAME" text="room_new" width="100%" height="40" />
+    <hbox>
+        <button text="Create" id="ID_CREATEMAP"/>
+        <button text="Cancel" id="ID_CANCELMAP"/>
+    </hbox>
+</dialog>

@@ -1,0 +1,13 @@
+<vbox width="100%" height="100%">
+    <menubar width="100%">
+        <menu text="File">
+            <menuitem id="ID_NEWMAP" text="New Map" shortcutText="Ctrl+N"/>
+            <menuitem id="ID_OPENMAP" text="Open Map" shortcutText="Ctrl+O"/>
+        </menu>   
+    </menubar> 
+    <button-bar selectedIndex="1" direction="vertical" horizontalAlign="right">
+        <button id="ID_SELECTTOOL" width="50" icon="data/editor/map/tool_select.png" />
+        <button id="ID_PAINTTOOL" width="50" icon="data/editor/map/tool_paint.png" />
+        <button id="ID_ERASETOOL" width="50" icon="data/editor/map/tool_erase.png" />
+    </button-bar>
+</vbox>
