@@ -1,5 +1,6 @@
 package undertale.object;
 
+import engine.Controls;
 import engine.GameObject;
 import flixel.FlxG;
 import flixel.math.FlxPoint;
@@ -23,13 +24,13 @@ class Player extends GameObject {
         var velX = 0.0;
         var velY = 0.0;
 
-        if (FlxG.keys.pressed.D)
+		if (Controls.pressed("move_right"))
 			velX += baseSpeed;
-        if (FlxG.keys.pressed.A)
+		if (Controls.pressed("move_left"))
 			velX -= baseSpeed;
-        if (FlxG.keys.pressed.W)
+		if (Controls.pressed("move_up"))
 			velY -= baseSpeed;
-        if (FlxG.keys.pressed.S)
+		if (Controls.pressed("move_down"))
 			velY += baseSpeed;
 
         velocity = new FlxPoint(velX, velY);
@@ -38,16 +39,18 @@ class Player extends GameObject {
 
 	private function updateAnim()
 	{
-		if (FlxG.keys.pressed.W)
+		var moving = Controls.pressed("move_up") || Controls.pressed("move_down") || Controls.pressed("move_left") || Controls.pressed("move_right");
+
+		if (Controls.pressed("move_up"))
 			curDirection = "u";
-		if (FlxG.keys.pressed.S)
+		if (Controls.pressed("move_down"))
 			curDirection = "d";
-		if (FlxG.keys.pressed.D)
+		if (Controls.pressed("move_right"))
 			curDirection = "r";
-		if (FlxG.keys.pressed.A)
+		if (Controls.pressed("move_left"))
 			curDirection = "l";
 
-		animation.play("idle_" + curDirection);
+		animation.play((moving ? "move_" : "idle_") + curDirection);
             
     }
 }

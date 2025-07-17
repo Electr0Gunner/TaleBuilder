@@ -1,5 +1,6 @@
 package;
 
+import engine.Controls;
 import engine.Resources;
 import flixel.FlxG;
 import flixel.FlxGame;
@@ -24,6 +25,10 @@ class Main extends Sprite
 		debugSprite = new Sprite();
 		debugSprite.alpha = 0.0;
 		debugSprite.mouseEnabled = false;
+		Controls.registerBind("move_right", RIGHT);
+		Controls.registerBind("move_left", LEFT);
+		Controls.registerBind("move_down", DOWN);
+		Controls.registerBind("move_up", UP);
 		addChild(new FlxGame(0, 0, undertale.TestState));
 		FlxG.autoPause = false;
 		addChild(debugSprite);
