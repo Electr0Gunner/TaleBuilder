@@ -6,6 +6,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.tweens.FlxTween;
+import haxe.Json;
 import haxe.ui.RuntimeComponentBuilder;
 import haxe.ui.components.Button;
 import haxe.ui.components.TextField;
@@ -13,6 +14,7 @@ import haxe.ui.containers.dialogs.Dialog;
 import haxe.ui.containers.menus.MenuItem;
 import haxe.ui.core.Component;
 import lime.utils.Assets;
+import sys.io.File;
 import undertale.system.overworld.Overworld.Layer;
 import undertale.system.overworld.Overworld.Tile;
 import undertale.system.overworld.Overworld;
@@ -25,6 +27,8 @@ enum MapTool {
 }
 
 class MapEditor extends Scene {
+
+	var isRoomSavedOnDisk:Bool = false;
 
     var room:Room;
 
@@ -80,6 +84,12 @@ class MapEditor extends Scene {
         var openMapItem = _ui.findComponent("ID_OPENMAP", MenuItem);
         openMapItem.onClick = onOpenMapClick;
 
+		var saveMapItem = _ui.findComponent("ID_SAVEMAP", MenuItem);
+		saveMapItem.onClick = onSaveMapClick;
+
+		var savemapasItem = _ui.findComponent("ID_SAVEASMAP", MenuItem);
+		savemapasItem.onClick = onSaveAsMapClick;
+
         var paintBttn = _ui.findComponent("ID_PAINTTOOL", Button);
         paintBttn.onClick = onPaintToolClick;
 
@@ -95,8 +105,8 @@ class MapEditor extends Scene {
 
         var mousePos = FlxG.mouse.getPosition();
 
-        var xT:Int = Math.round(mousePos.x / Overworld.TILE_SIZE);
-        var yT:Int = Math.round(mousePos.y / Overworld.TILE_SIZE);
+		var xT:Int = Std.int(mousePos.x / Overworld.TILE_SIZE);
+		var yT:Int = Std.int(mousePos.y / Overworld.TILE_SIZE);
 
         tileIndicator.x = xT * Overworld.TILE_SIZE;
         tileIndicator.y = yT * Overworld.TILE_SIZE;
@@ -105,7 +115,7 @@ class MapEditor extends Scene {
             return;
         room.update(elapsed);
 
-        if (FlxG.mouse.justReleased)
+		if (FlxG.mouse.pressed)
         {
             switch (currentTool)
             {
@@ -120,6 +130,7 @@ class MapEditor extends Scene {
     }
 
     function paintTile(tileX:Int, tileY:Int) {
+		ensureColumnExists(tileX);
         room.layers[currentLayer].tiles[tileX][tileY] = {x:tileX, y: tileY, img: "data/editor/map/temp_tile.png"}; //temp
     }
 
@@ -128,18 +139,26 @@ class MapEditor extends Scene {
     }
 
     function deleteTile(tileX:Int, tileY:Int) {
+		ensureColumnExists(tileX);
         room.layers[currentLayer].tiles[tileX][tileY] = null;
     }
+
+	function ensureColumnExists(x:Int)
+	{
+		if (room.layers[currentLayer].tiles[x] == null)
+			room.layers[currentLayer].tiles[x] = []; // ensure the array of the current column is not null
+	}
 
 
     public function createMap(name:String) {
         room = new Room();
         clearGrid();
+		isRoomSavedOnDisk = false;
     }
 
     public function clearGrid() {
         tileIndicator.visible = true;
-            var tiles = [];
+		var tiles = [];
         for (x in 0...mapWidth) {
             var column = [];
             for (y in 0...mapHeight) {
@@ -203,11 +222,37 @@ class MapEditor extends Scene {
         cancelBttn.onClick = onCancelClick;
     }
 
-    public function onOpenMapClick(e:haxe.ui.events.MouseEvent):Void {
+	public function onOpenMapClick(e:haxe.ui.events.MouseEvent)
+	{
         tileIndicator.visible = false;
         var dialogPath = Resources.xml("OpenMapDialog", "editor/map");
         _openmapDialog = cast(RuntimeComponentBuilder.fromString(Assets.getText(dialogPath)), Dialog);
-        _openmapDialog.show();
+		// _openmapDialog.show();
+		var json = sys.io.File.getContent("temp/room.json");
+		var roomFile:RoomFile = Json.parse(json);
+
+		room = new Room();
+
+		for (l in 0...roomFile.layers.length)
+		{
+			var layer:Layer = {tiles: [], decals: roomFile.layers[l].decals};
+			currentLayer = l;
+
+			for (col in 0...roomFile.layers[currentLayer].tiles.length)
+			{
+				var columnTiles = roomFile.layers[l].tiles[col];
+				if (columnTiles == null)
+					continue;
+				for (tile in columnTiles)
+				{
+					if (layer.tiles[col] == null)
+						layer.tiles[col] = [];
+					layer.tiles[col][tile.y] = tile;
+				}
+			}
+
+			room.layers.push(layer);
+		}
     }
 
     public function onCreateClick(e:haxe.ui.events.MouseEvent) {
@@ -224,5 +269,43 @@ class MapEditor extends Scene {
         _newMapDialog.hide();
         tileIndicator.visible = true;
     }
+
+	public function onSaveMapClick(e:haxe.ui.events.MouseEvent)
+	{
+		if (!isRoomSavedOnDisk)
+		{
+			onSaveAsMapClick(e);
+			return;
+		}
+	}
+
+	public function onSaveAsMapClick(e:haxe.ui.events.MouseEvent)
+	{
+		var cleanLayers:Array<Layer> = [];
+		for (l in 0...room.layers.length)
+		{
+			var layer:Layer = {tiles: [], decals: []};
+			var tilesOnLayer:Array<Array<Tile>> = [];
+			for (tilesX in 0...room.layers[l].tiles.length)
+			{
+				for (tileY in 0...room.layers[l].tiles[tilesX].length)
+				{
+					var tile = room.layers[l].tiles[tilesX][tileY];
+					if (tile != null) // Fill the room file only with valid tiles, cause they represent their position in the arrays anyways
+					{
+						if (tilesOnLayer[tilesX] == null)
+							tilesOnLayer[tilesX] = [];
+						tilesOnLayer[tilesX].push(tile);
+					}
+				}
+			}
+			layer.tiles = tilesOnLayer;
+			cleanLayers.push(layer);
+		}
+		var roomFile:RoomFile = {layers: cleanLayers};
+
+		var jsonFile:String = Json.stringify(roomFile);
+		File.saveContent("temp/room.json", jsonFile);
+	}
 
 }

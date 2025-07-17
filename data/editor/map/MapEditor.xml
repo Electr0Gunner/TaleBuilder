@@ -1,8 +1,10 @@
 <vbox width="100%" height="100%">
     <menubar width="100%">
         <menu text="File">
-            <menuitem id="ID_NEWMAP" text="New Map" shortcutText="Ctrl+N"/>
-            <menuitem id="ID_OPENMAP" text="Open Map" shortcutText="Ctrl+O"/>
+            <menuitem id="ID_NEWMAP" text="New" shortcutText="Ctrl+N"/>
+            <menuitem id="ID_OPENMAP" text="Open" shortcutText="Ctrl+O"/>
+            <menuitem id="ID_SAVEMAP" text="Save" shortcutText="Ctrl+S"/>
+            <menuitem id="ID_SAVEASMAP" text="Save as" shortcutText="Ctrl+Shift+S"/>
         </menu>   
     </menubar> 
     <button-bar selectedIndex="1" direction="vertical" horizontalAlign="right">

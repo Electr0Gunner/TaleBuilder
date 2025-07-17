@@ -9,6 +9,11 @@ import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import undertale.system.overworld.Overworld;
 
+typedef RoomFile =
+{
+	var layers:Array<Layer>;
+}
+
 class Room extends FlxObject {
     public static var tileGraphicCache:Map<String, FlxGraphic> = new Map<String, FlxGraphic>();
 
@@ -32,6 +37,8 @@ class Room extends FlxObject {
         {
             for (tilecolumn in layer.tiles)
             {
+				if (tilecolumn == null)
+					continue;
                 for (tile in tilecolumn)
                 {
                     if (tile == null)
