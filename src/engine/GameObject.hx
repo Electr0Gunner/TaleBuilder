@@ -8,12 +8,12 @@ import box2D.dynamics.B2BodyDef;
 import box2D.dynamics.B2BodyType;
 import box2D.dynamics.B2Fixture;
 import box2D.dynamics.B2FixtureDef;
-import flixel.FlxSprite;
 import flixel.math.FlxRect;
 import flixel.util.FlxDirectionFlags;
 import openfl.display.Graphics;
 
-class GameObject extends FlxSprite {
+class GameObject extends Sprite
+{
     public var body:B2Body;
 
     public var bodyDefinition:B2BodyDef;

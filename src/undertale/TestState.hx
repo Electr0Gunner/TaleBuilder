@@ -16,7 +16,6 @@ import undertale.object.Player;
 
 class TestState extends Scene {
 
-    var test_spr:FlxSprite;
     var cam:Camera;
     var player:Player;
     var test_wall:GameObject;
@@ -37,10 +36,6 @@ class TestState extends Scene {
         var grid:FlxSprite = FlxGridOverlay.create(20, 20, -1, -1, true, 0xFF444444, 0xFF5E5E5E);
         grid.z = -1;
         add(grid);
-
-        test_spr = new FlxSprite(0, 0).loadGraphic(Resources.image("sprites/mainchar/mainchar_d0"));
-        test_spr.z = 1;
-        //add(test_spr);
 
         var test_box1 = new FlxSprite(70, 70);
         test_box1.makeGraphic(16, 16, FlxColor.RED);
@@ -68,8 +63,8 @@ class TestState extends Scene {
         mapButton.camera = ui_cam;
         add(mapButton);
 
-        player = new Player();
-        player.speed = 40;
+		player = new Player();
+		player.z = 1;
         add(player);
         
         test_wall = new GameObject(100, 0);

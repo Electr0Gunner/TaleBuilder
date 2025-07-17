@@ -1,0 +1,47 @@
+{
+    "img": "mainchar",
+    "animFormat": "Aseprite",
+    "animations":
+    [
+        {
+            "name": "idle_l",
+            "framerate": 6,
+            "indices": [3]
+        },
+        {
+            "name": "idle_r",
+            "framerate": 6,
+            "indices": [5]
+        },
+        {
+            "name": "idle_u",
+            "framerate": 6,
+            "indices": [7]
+        },
+        {
+            "name": "idle_d",
+            "framerate": 6,
+            "indices": [0]
+        },
+        {
+            "name": "move_l",
+            "framerate": 6,
+            "indices": [3, 4]
+        },
+        {
+            "name": "move_r",
+            "framerate": 6,
+            "indices": [5, 6]
+        },
+        {
+            "name": "move_u",
+            "framerate": 6,
+            "indices": [7, 8, 7, 9]
+        },
+        {
+            "name": "move_d",
+            "framerate": 6,
+            "indices": [0, 1, 0, 2]
+        }
+    ]
+}

@@ -21,6 +21,11 @@ class Resources {
     {
         return getPath('$key.json', library);
     }
+
+	public static function file(key:String, library:String = DEFAULT_KEY):String
+	{
+		return getPath('$key', library);
+	}
   
     public static function sound(key:String, library:String = DEFAULT_KEY):String
     {
