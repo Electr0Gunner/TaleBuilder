@@ -62,7 +62,7 @@ class MapEditor extends Scene {
         grid.z = -1;
         add(grid);
 
-        var editorPath = Resources.xml("MapEditor", "editor/map");
+		var editorPath = Resources.xml("editor/map/MapEditor");
         _ui = RuntimeComponentBuilder.fromString(Assets.getText(editorPath));
         _ui.cameras = [ui_cam];
         _ui.z = 100;
@@ -131,7 +131,7 @@ class MapEditor extends Scene {
 
     function paintTile(tileX:Int, tileY:Int) {
 		ensureColumnExists(tileX);
-        room.layers[currentLayer].tiles[tileX][tileY] = {x:tileX, y: tileY, img: "data/editor/map/temp_tile.png"}; //temp
+		room.layers[currentLayer].tiles[tileX][tileY] = {x: tileX, y: tileY, img: "base/editor/map/temp_tile.png"}; // temp
     }
 
     function selectTile(tileX:Int, tileY:Int) {
@@ -211,7 +211,7 @@ class MapEditor extends Scene {
 
     public function onNewMapClick(e:haxe.ui.events.MouseEvent):Void {
         tileIndicator.visible = false;
-        var dialogPath = Resources.xml("NewMapDialog", "editor/map");
+		var dialogPath = Resources.xml("editor/map/NewMapDialog");
         _newMapDialog = cast(RuntimeComponentBuilder.fromString(Assets.getText(dialogPath)), Dialog);
         _newMapDialog.show();
         
@@ -225,7 +225,7 @@ class MapEditor extends Scene {
 	public function onOpenMapClick(e:haxe.ui.events.MouseEvent)
 	{
         tileIndicator.visible = false;
-        var dialogPath = Resources.xml("OpenMapDialog", "editor/map");
+		var dialogPath = Resources.xml("editor/map/OpenMapDialog");
         _openmapDialog = cast(RuntimeComponentBuilder.fromString(Assets.getText(dialogPath)), Dialog);
 		// _openmapDialog.show();
 		var json = sys.io.File.getContent("temp/room.json");

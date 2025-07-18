@@ -1,71 +1,82 @@
 package engine;
 
+import flixel.FlxG;
 import sys.FileSystem;
 
 class Resources {
+	public static var BASE_FOLDER = "base";
+	public static var DATA_FOLDER = "data";
 
-    public static var DEFAULT_LIBRARY = "game";
+	public static var CURRENT_FOLDER = "data";
+	public static var CURRENT_GAME = "";
     public static inline var DEFAULT_KEY:String = "_default";
 
-    public static function txt(key:String, library:String = DEFAULT_KEY):String
+	public static function txt(key:String, library:String = DEFAULT_KEY, game:String = DEFAULT_KEY):String
     {
-        return getPath('$key.txt', library);
+		return getPath('$key.txt', game, library);
     }      
     
-    public static function xml(key:String, library:String = DEFAULT_KEY):String
+	public static function xml(key:String, library:String = DEFAULT_KEY, game:String = DEFAULT_KEY):String
     {
-        return getPath('$key.xml', library);
+		return getPath('$key.xml', game, library);
     }
   
-    public static function json(key:String, library:String = DEFAULT_KEY):String
+	public static function json(key:String, library:String = DEFAULT_KEY, game:String = DEFAULT_KEY):String
     {
-        return getPath('$key.json', library);
+		return getPath('$key.json', game, library);
     }
 
-	public static function file(key:String, library:String = DEFAULT_KEY):String
+	public static function file(key:String, library:String = DEFAULT_KEY, game:String = DEFAULT_KEY):String
 	{
-		return getPath('$key', library);
+		return getPath('$key', game, library);
 	}
-  
-    public static function sound(key:String, library:String = DEFAULT_KEY):String
-    {
-        return getPath('sounds/$key.ogg', library);
-    }
-  
-    public static function soundRandom(key:String, min:Int, max:Int, library:String = DEFAULT_KEY):String
-    {
-        return sound(key + 0, library);
-    }
-  
-    public static function music(key:String, library:String = DEFAULT_KEY):String
-    {
-        return getPath('music/$key.ogg', library);
-    }
-  
-    public static function videos(key:String, library:String = DEFAULT_KEY):String
-    {
-        return getPath('videos/$key.png', library);
-    }
-  
-    public static function image(key:String, library:String = DEFAULT_KEY):String
-    {
-        return getPath('images/$key.png', library);
-    }
-  
-    public static function font(key:String, library:String = DEFAULT_KEY):String
-    {
-        if (FileSystem.exists(FileSystem.absolutePath(getPath('fonts/$key.otf', library)))) //Check for OpenType Font first
-            return getPath('fonts/$key.otf', library);
 
-        return getPath('fonts/$key.ttf', library); //fallback on TrueType Font
+	public static function audioRandom(key:String, min:Int, max:Int, library:String = DEFAULT_KEY, game:String = DEFAULT_KEY):String
+    {
+		var randIndex = FlxG.random.int(min, max);
+		return audio(key + randIndex, library);
+    }
+  
+	public static function audio(key:String, library:String = DEFAULT_KEY, game:String = DEFAULT_KEY):String
+    {
+		return getPath('$key.ogg', game, library);
     }
 
-    static function getPath(file:String, library:String):String
+	public static function image(key:String, library:String = DEFAULT_KEY, game:String = DEFAULT_KEY):String
     {
-        var lib:String = library;
-        if (library == DEFAULT_KEY)
-            lib = DEFAULT_LIBRARY;
+		return getPath('$key.png', game, library);
+    }
+  
+	public static function font(key:String, library:String = DEFAULT_KEY, game:String = DEFAULT_KEY):String
+    {
+		if (FileSystem.exists(getAbsolutePath(getPath('$key.otf', game, library)))) // Check for OpenType Font first
+			return getPath('$key.otf', game, library);
 
-        return 'data/$lib/$file';
+		return getPath('$key.ttf', game, library); // fallback on TrueType Font
+    }
+
+	static function getPath(file:String, game:String, library:String):String
+    {
+		var lib:String = library == DEFAULT_KEY ? CURRENT_FOLDER : library;
+		var gameFolder = game == DEFAULT_KEY ? CURRENT_GAME : game;
+
+		// Try to find it in the data folder/aka mods/games
+		var gamePath = '$DATA_FOLDER/$gameFolder/$file';
+		if (FileSystem.exists(getAbsolutePath(gamePath)))
+			return gamePath;
+
+		// Try to find it in the base/engine folder
+		var engineRoot = '$BASE_FOLDER/$file';
+		if (FileSystem.exists(getAbsolutePath(engineRoot)))
+			return engineRoot;
+
+		// return
+		return '$lib/$file';
+    }
+
+	public static function getAbsolutePath(path:String)
+	{
+		var absolute = FileSystem.absolutePath(path);
+		return absolute;
     }
 }

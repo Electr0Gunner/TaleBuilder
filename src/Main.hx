@@ -23,7 +23,7 @@ class Main extends Sprite
 		Toolkit.init(); //Haxe UI
 		Toolkit.theme = 'dark';
 		CursorHelper.useCustomCursors = false;
-		Resources.DEFAULT_LIBRARY = "undertale";
+		Resources.CURRENT_GAME = "undertale";
 		debugSprite = new Sprite();
 		debugSprite.alpha = 0.0;
 		debugSprite.mouseEnabled = false;

@@ -25,7 +25,7 @@ class Player extends GameObject {
     override public function new(X:Float = 0, Y:Float = 0) {
         super(X, Y);
 		// loadGraphic(Resources.image("sprites/mainchar/mainchar"));
-		loadSprite(Resources.file("info/sprites/spr_mainchar"));
+		loadSprite(Resources.json("info/sprites/spr_mainchar"));
         resetSizeFromFrame();
 		createRectangleBody(15, 15);
 		debugSpr = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0, true);

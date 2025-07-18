@@ -58,7 +58,7 @@ class TestState extends Scene {
         var text:Text = new Text(100, 100, "TESTING", 12);
         text.z = 99;
         text.camera = ui_cam;
-        text.font = Resources.font("DTM-Sans");
+		text.font = Resources.font("fonts/DTM-Sans");
         add(text);
 
         var mapButton:FlxButton = new FlxButton(400, 300, "Map Editor", function name() {

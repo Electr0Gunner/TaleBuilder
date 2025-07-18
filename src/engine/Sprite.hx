@@ -46,24 +46,28 @@ class Sprite extends FlxSprite {
     }
 
     public function loadSprite(path:String) {
-        if (!FileSystem.exists(path+ ".json"))
+		if (!FileSystem.exists(path))
         {
             FlxG.log.error("Sprite definition not found at: " + path);
             return;
         }
-        var jsonData:String = FlxG.assets.getText(path + ".json");
+		var jsonData:String = FlxG.assets.getText(path);
         spriteDef = Json.parse(jsonData);
 
         switch (spriteDef.animFormat)
         {
             case "Sparrow":
-                frames = FlxAtlasFrames.fromSparrow(Resources.image("sprites/mainchar/" + spriteDef.img), FlxG.assets.getText(Resources.xml("images/sprites/mainchar/" + spriteDef.img)));
+				frames = FlxAtlasFrames.fromSparrow(Resources.image("images/sprites/mainchar/" + spriteDef.img),
+					FlxG.assets.getText(Resources.xml("images/sprites/mainchar/" + spriteDef.img)));
             case "Aseprite":
-                frames = FlxAtlasFrames.fromTexturePackerJson(Resources.image("sprites/mainchar/" + spriteDef.img), FlxG.assets.getText(Resources.json("images/sprites/mainchar/" + spriteDef.img)), false); //no support for durations YET
+				frames = FlxAtlasFrames.fromTexturePackerJson(Resources.image("images/sprites/mainchar/" + spriteDef.img),
+					FlxG.assets.getText(Resources.json("images/sprites/mainchar/" + spriteDef.img)), false); // no support for durations YET
             case "TexturePackerJson":
-                frames = FlxAtlasFrames.fromTexturePackerJson(Resources.image("sprites/mainchar/" + spriteDef.img), FlxG.assets.getText(Resources.json("images/sprites/mainchar/" + spriteDef.img)), true);
+				frames = FlxAtlasFrames.fromTexturePackerJson(Resources.image("images/sprites/mainchar/" + spriteDef.img),
+					FlxG.assets.getText(Resources.json("images/sprites/mainchar/" + spriteDef.img)), true);
             case "TexturePackerXML":
-                frames = FlxAtlasFrames.fromTexturePackerXml(Resources.image("sprites/mainchar/" + spriteDef.img), FlxG.assets.getText(Resources.xml("images/sprites/mainchar/" + spriteDef.img)));
+				frames = FlxAtlasFrames.fromTexturePackerXml(Resources.image("images/sprites/mainchar/" + spriteDef.img),
+					FlxG.assets.getText(Resources.xml("images/sprites/mainchar/" + spriteDef.img)));
         }
 
         for (anim in spriteDef.animations)

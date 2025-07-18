@@ -58,6 +58,7 @@ class Project extends HXProject {
     function configureAssets()
     {
         includeAssets("Data", "data", [ "*" ], []);
+        includeAssets("Base", "base", [ "*" ], []);
     }
 
     function importLibs()
