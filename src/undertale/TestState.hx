@@ -8,10 +8,12 @@ import engine.Scene;
 import engine.Text;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import undertale.editor.map.MapEditor;
+import undertale.object.Entity;
 import undertale.object.Player;
 
 class TestState extends Scene {
@@ -33,9 +35,11 @@ class TestState extends Scene {
         FlxG.cameras.add(ui_cam, false);
         ui_cam.bgColor.alpha = 0;
 
-        var grid:FlxSprite = FlxGridOverlay.create(20, 20, -1, -1, true, 0xFF444444, 0xFF5E5E5E);
-        grid.z = -1;
-        add(grid);
+		var grid:FlxSprite = FlxGridOverlay.create(20, 20, 80, 80, true, 0xFF444444, 0xFF5E5E5E);
+
+		var tileGrid:FlxBackdrop = new FlxBackdrop(grid.graphic);
+		tileGrid.z = -1;
+		add(tileGrid);
 
         var test_box1 = new FlxSprite(70, 70);
         test_box1.makeGraphic(16, 16, FlxColor.RED);
@@ -64,10 +68,11 @@ class TestState extends Scene {
         add(mapButton);
 
 		player = new Player();
+		player.attachCamera(cam);
 		player.z = 1;
         add(player);
         
-        test_wall = new GameObject(100, 0);
+		test_wall = new Entity(100, 0, "wall");
         test_wall.makeGraphic(300, 20);
         test_wall.createRectangleBody(300, 20, STATIC_BODY);
         add(test_wall);

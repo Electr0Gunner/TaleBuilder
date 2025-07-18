@@ -8,6 +8,7 @@ import box2D.dynamics.B2BodyDef;
 import box2D.dynamics.B2BodyType;
 import box2D.dynamics.B2Fixture;
 import box2D.dynamics.B2FixtureDef;
+import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxDirectionFlags;
 import openfl.display.Graphics;
@@ -48,6 +49,29 @@ class GameObject extends Sprite
 
         body = PhysicsWorld.world.createBody(bodyDefinition);
         fixture = body.createFixture(fixturedef);
+		fixture.SetUserData(this);
+	}
+
+	public static function rayCastGetGameObject(pos:FlxPoint, direction:FlxPoint, distance:Float):GameObject
+	{
+		var hitObject:GameObject = null;
+		var dirVec = new B2Vec2(direction.x, direction.y);
+		dirVec.multiply(Utils.pixelsToMeters(distance));
+
+		PhysicsWorld.world.rayCast(function(f:B2Fixture, p:B2Vec2, n:B2Vec2, frac:Float):Float
+		{
+			var obj = cast(f.getUserData(), GameObject);
+			if (obj != null)
+			{
+				hitObject = obj;
+				return frac;
+			}
+			return 1;
+		},
+			new B2Vec2(Utils.pixelsToMeters(pos.x), Utils.pixelsToMeters(pos.y)),
+			new B2Vec2(Utils.pixelsToMeters(pos.x) + dirVec.x, Utils.pixelsToMeters(pos.y) + dirVec.y));
+
+		return hitObject;
     }
 
     override function update(elapsed:Float) {
